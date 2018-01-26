@@ -98,6 +98,7 @@ class App extends React.Component {
                 <Button handleClick={this.voteselected(this.state.anecdotes)} text="VOTE" />
                 <Button handleClick={this.shownext()} text="NEXT" />
                 <DisplayMostVoted anecdote = {this.getmostvoted(anecdotes)} />
+                <DisplayVotes anecdote={this.getmostvoted(anecdotes)} />
             </div>
         )
   }
