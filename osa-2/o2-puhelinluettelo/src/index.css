@@ -1,0 +1,21 @@
+.error {
+width: 30%;
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.info {
+	width: 20%;
+  color: black;
+  background: lightgreen;
+  font-size: 17px;
+  border-style: solid;
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
