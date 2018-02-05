@@ -61,7 +61,6 @@ class App extends React.Component {
    constructor(props) {
       super(props)
       this.state = {
-         filteredpersons: [],
          persons: [],
          newName: '',
          newNumber: '',
@@ -98,7 +97,6 @@ class App extends React.Component {
       } else {
          console.log("Wrong message type at showMessage()");
       }
-
       this.setState({
          error,
          info
@@ -120,65 +118,42 @@ class App extends React.Component {
    }
 
    handleFilterChange = (event) => {
-      const filter = event.target.value
-
-      const containsfilter = (person) => {
-         return person.name.toLowerCase().includes(filter.toLowerCase())
-      }
-      const filteredpersons = this.state.persons.filter(containsfilter)
-      this.setState({ filteredpersons, filter })
-   }
-
-   nameInList = (nimi) => {
-      if (this.findName(nimi) === -1) {
-         return (false)
-      } else { return (true) }
-   }
-
-   findName = (nimi) => {
-      const names = this.state.persons.map(person => person.name.toLowerCase())
-      const index = names.indexOf(nimi.toLowerCase())
-      return (index)
+      this.setState({ filter: event.target.value })
    }
 
    getPersonsToShow = () => {
+      const containsfilter = (person) => {
+         return person.name.toLowerCase().includes(this.state.filter.toLowerCase())
+      }
+
       if (this.state.filter === '') {
          return (this.state.persons)
-      } else return (this.state.filteredpersons)
+      } else return (this.state.persons.filter(containsfilter))
    }
 
    handleSubmit = (event) => {
       event.preventDefault()
-      const namesubm = this.state.newName
+      const name = this.state.newName
+      const number = this.state.newNumber
 
-      if (!this.nameInList(namesubm)) {
-         this.addPerson()
-      } else if (window.confirm(`Nimi on jo listassa, vaihdetaanko nimelle ${namesubm} uusi numero?`)) {
-         this.editNumber(namesubm)
+      const existingPerson = this.state.persons.find(person => person.name === name)
+
+
+      if (!existingPerson) {
+         this.addPerson({ name, number })
+      } else if (window.confirm(`Nimi on jo listassa, vaihdetaanko nimelle ${name} uusi numero?`)) {
+         this.editNumber(existingPerson.id)
       }
    }
 
-   addPerson = () => {
-      const newperson = {
-         name: this.state.newName,
-         number: this.state.newNumber
-      }
-
-      const getfilteredpersons = (newperson) => {
-         let filteredpersons = this.state.filteredpersons
-         if (newperson.name.toLowerCase().includes(this.state.filter.toLowerCase())) {
-            filteredpersons = filteredpersons.concat(newperson)
-         }
-         return filteredpersons
-      }
+   addPerson = (person) => {
 
       luetteloService
-         .create(newperson)
+         .create(person)
          .then(response => {
             console.log("create response: ", response);
             this.setState({
                persons: this.state.persons.concat(response),
-               filteredpersons: getfilteredpersons(response),
                newName: '',
                newNumber: ''
             })
@@ -186,56 +161,49 @@ class App extends React.Component {
       this.showMessage('info', 'Numero lisätty')
    }
 
-   editNumber = (name) => {
+   editNumber = (id) => {
+      const name = this.state.newName
+      const number = this.state.newNumber
       console.log("muokataan nimeä: ", name);
-      const persontoedit = this.state.persons[this.findName(name)]
-      const editedperson = { ...persontoedit, number: this.state.newNumber }
-      console.log("editedperson: ", editedperson)
 
       luetteloService
-         .update(editedperson.id, editedperson)
+         .update(id, { name, number })
          .then(response => {
             console.log("update response: ", response)
-            this.showMessage('info', 'Numero päivitetty')
             this.setState({
-               persons: this.state.persons.map(person => person.name !== name ? person : editedperson),
+               persons: this.state.persons.map(person => person.id !== id ? person : response),
                newName: '',
                newNumber: ''
             });
+            this.showMessage('info', 'Numero päivitetty')
          })
          .catch(error => {
             console.log("update error: ", error);
-            this.showMessage('error', `Henkilö ${editedperson.name} on jo valitettavasti poistettu palvelimelta`)
-            this.setState({ persons: this.state.persons.filter(person => person.name !== name) });
+            this.setState({ persons: this.state.persons.filter(person => person.id !== id) });
+            this.showMessage('error', `Henkilö ${name} on jo valitettavasti poistettu palvelimelta`)
             if (window.confirm('Nimeä ei löydykään luettelosta, lisätäänkö se?')) {
-               this.addPerson()
+               this.addPerson({ name, number })
             }
          })
    }
 
    deletePerson = (id) => {
       return () => {
-         const persoatndex = this.state.persons.findIndex(person => person.id === id)
-         const persontodelete = { ...this.state.persons[persoatndex] }
-         console.log("person to delete: ", persontodelete)
+         const person = this.state.persons.find(person => person.id === id)
+         console.log("person to delete: ", person)
 
-         if (window.confirm(`Poistetaanko henkilö ${persontodelete.name}`)) {
-            luetteloService
-               .deletePerson(id)
-               .then(response => {
-                  console.log("delete response: ", response)
-                  luetteloService
-                     .getAll()
-                     .then(response => {
-                        console.log("getall response: ", response);
-                        this.setState({
-                           persons: response,
-                           filteredpersons: this.state.filteredpersons.filter(person => person.id !== id)
-                        });
-                     })
-               }
-               )
+         if (!window.confirm(`Poistetaanko henkilö ${person.name}`)) {
+            return
          }
+         luetteloService
+            .deletePerson(id)
+            .then(response => {
+               console.log("delete response: ", response)
+               this.setState({
+                  persons: this.state.persons.filter(person => person.id !== id)
+               });
+               this.showMessage('info', `Poistettiin henkilö ${person.name}`)
+            })
       }
    }
 
