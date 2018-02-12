@@ -157,8 +157,8 @@ class App extends React.Component {
                newName: '',
                newNumber: ''
             })
+            this.showMessage('info', 'Numero lisätty')
          })
-      this.showMessage('info', 'Numero lisätty')
    }
 
    editNumber = (id) => {
