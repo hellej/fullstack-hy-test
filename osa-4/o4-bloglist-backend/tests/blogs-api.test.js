@@ -84,7 +84,7 @@ describe('When there is initially some blogs in the db', async () => {
         .post('/api/blogs')
         .set('Authorization', 'Bearer ' + token)
         .send(newBlog)
-        .expect(200)
+        .expect(201)
         .expect('Content-Type', /application\/json/)
 
       const blogsAfterAdd = await blogsInDb()
@@ -100,7 +100,7 @@ describe('When there is initially some blogs in the db', async () => {
         .post('/api/blogs')
         .set('Authorization', 'Bearer ' + token)
         .send(newBlog)
-        .expect(200)
+        .expect(201)
 
       expect(response.body.likes).toBe(newBlog.likes)
     })
@@ -112,7 +112,7 @@ describe('When there is initially some blogs in the db', async () => {
         .post('/api/blogs')
         .set('Authorization', 'Bearer ' + token)
         .send(newBlog)
-        .expect(200)
+        .expect(201)
 
       expect(response.body.likes).toBe(0)
     })
@@ -120,16 +120,17 @@ describe('When there is initially some blogs in the db', async () => {
     test('blog without url or title causes error 400', async () => {
 
       delete newBlog.url
-      await api
+      let res = await api
         .post('/api/blogs')
         .set('Authorization', 'Bearer ' + token)
         .send(newBlog)
         .expect(400)
+      expect(res.body.error).toContain('title or url missing')
 
       delete newBlog.title
       newBlog.url = 'www.tba.com'
 
-      await api
+      res = await api
         .post('/api/blogs')
         .set('Authorization', 'Bearer ' + token)
         .send(newBlog)

@@ -1,0 +1,63 @@
+body {
+  line-height: 140%;
+}
+
+.input {
+  line-height: 160%;
+}
+
+
+.error {
+  /* width: 30%; */
+  display: inline-block;
+  color: rgb(0, 0, 0);
+  border-color: rgb(255, 100, 80);
+  background: rgb(245, 245, 245);
+  font-size: 17px;
+  border-style: solid;
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.info {
+  display: inline-block;
+  color: black;
+  border-color: rgb(82, 82, 82);
+  background: rgb(220, 255, 220);
+  font-size: 17px;
+  border-style: solid;
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.blog {
+  /* display: inline-block; */
+  width: 250px;
+  color: rgb(15, 15, 15);
+  border-color: rgb(107, 107, 107);
+  background: rgb(255, 255, 255);
+  /* font-size: 17px; */
+  border-style: solid;
+  border-radius: 0.5px;
+  padding: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.selectedBlog {
+  display: inline-block;
+  color: black;
+  border-color: rgb(82, 82, 82);
+  background: rgb(255, 255, 255);
+  /* font-size: 17px; */
+  border-style: solid;
+  border-radius: 1.5px;
+  padding: 10px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+
+

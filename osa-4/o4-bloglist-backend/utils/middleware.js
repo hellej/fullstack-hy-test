@@ -4,9 +4,12 @@ const logger = (request, response, next) => {
   if (process.env.NODE_ENV === 'test') {
     return next()
   }
+  let token = request.get('authorization')
+  if (token) { token = token.substring(0, 150) } else { token = 'missing' }
   console.log('Method:', request.method)
   console.log('Path:  ', request.path)
   console.log('Body:  ', request.body)
+  console.log('Token:  ', token)
   console.log('---')
   next()
 }
