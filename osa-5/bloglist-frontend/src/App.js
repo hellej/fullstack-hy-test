@@ -18,7 +18,7 @@ const Notification = ({ notif }) => {
   )
 }
 
-const Blogs = ({ blogs, handleClick, handleLikeClick, handleDelete, selectedId }) => {
+const Blogs = ({ blogs, handleClick, handleLikeClick, handleDelete, selectedId, loggedInUser }) => {
   return (
     <div>
       <br></br>
@@ -30,6 +30,7 @@ const Blogs = ({ blogs, handleClick, handleLikeClick, handleDelete, selectedId }
           selectedId={selectedId}
           handleLikeClick={handleLikeClick}
           handleDelete={handleDelete}
+          loggedInUser={loggedInUser}
         />
       )}
     </div>
@@ -67,7 +68,7 @@ class App extends React.Component {
   }
 
   getUserFromWLS = () => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       return JSON.parse(loggedUserJSON)
     }
@@ -83,10 +84,11 @@ class App extends React.Component {
 
     if (newBlog.title) {
       this.blogForm.toggleVisibility()
+
       delete (newBlog.user)
       newBlog.user = {
-        name: JSON.parse(window.localStorage.getItem('loggedBlogappUser')).name,
-        username: JSON.parse(window.localStorage.getItem('loggedBlogappUser')).username
+        name: JSON.parse(window.localStorage.getItem('loggedBlogAppUser')).name,
+        username: JSON.parse(window.localStorage.getItem('loggedBlogAppUser')).username
       }
       this.showNotification({ message: `${newBlog.title} added to blogs`, notifType: 'info' })
       this.setState({
@@ -157,10 +159,10 @@ class App extends React.Component {
       console.log(user)
 
 
-      window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
-      this.setState({ username: '', password: '', user })
+      this.setState({ selectedBlog: '', username: '', password: '', user })
       this.showNotification({ message: `${user.username} succesfully logged in`, notifType: 'info' })
 
     } catch (exception) {
@@ -169,7 +171,7 @@ class App extends React.Component {
   }
 
   logout = (event) => {
-    window.localStorage.removeItem('loggedBlogappUser')
+    window.localStorage.removeItem('loggedBlogAppUser')
     this.setState({ username: '', password: '', user: null })
     this.showNotification({ message: 'Succesfully logged out', notifType: 'info' })
   }
@@ -234,6 +236,7 @@ class App extends React.Component {
               selectedId={this.state.selectedBlog}
               handleLikeClick={this.handleLikeClick}
               handleDelete={this.handleDelete}
+              loggedInUser={this.getUserFromWLS()}
             />
           </div>
         }

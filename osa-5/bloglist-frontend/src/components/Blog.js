@@ -1,11 +1,10 @@
 import React from 'react'
 
 
-const Blog = ({ blog, handleClick, handleLikeClick, handleDelete, selectedId }) => {
+const Blog = ({ blog, handleClick, handleLikeClick, handleDelete, selectedId, loggedInUser }) => {
   let style = { display: '' }
   if (blog.user !== undefined) {
-    const username = JSON.parse(window.localStorage.getItem('loggedBlogappUser')).username
-    style = { display: username === blog.user.username ? '' : 'none' }
+    style = { display: loggedInUser.username === blog.user.username ? '' : 'none' }
   }
 
   if (blog.id === selectedId) {
