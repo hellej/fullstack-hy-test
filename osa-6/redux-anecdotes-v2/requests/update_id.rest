@@ -1,0 +1,9 @@
+
+
+PUT http://localhost:3001/anecdotes/0oS7njJ
+content-type: application/json
+
+{
+   "content": "abba",
+   "votes": 14
+}
