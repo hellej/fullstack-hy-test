@@ -1,0 +1,11 @@
+POST http://localhost:3001/api/blogs
+content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1sdXVra2FpIiwiaWQiOiI1YTg0ODM0YTg2NGI0MjA2NjNiYmZhNTMiLCJpYXQiOjE1MTg2ODg3MDR9.MAi9JrJTW4j4r96I1HeR_vD8rLgevFDHWBNxepXApjE
+
+  {
+    "title": "Don't panic",
+    "author": "Douglas Adams",
+    "url": "www.tba.com",
+    "likes": 0,
+    "userId": "5a84834a864b420663bbfa53"
+  }

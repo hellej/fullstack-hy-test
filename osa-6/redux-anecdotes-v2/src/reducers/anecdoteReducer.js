@@ -22,7 +22,7 @@ const anecdoteReducer = (store = [], action) => {
 }
 
 
-export const anecdotesInitialization = (data) => {
+export const anecdotesInitialization = () => {
   return async (dispatch) => {
     const anecdotes = await anecdoteService.getAll()
     dispatch({
